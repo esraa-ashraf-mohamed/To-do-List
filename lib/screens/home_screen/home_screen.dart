@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_list/screens/edit_task/edit_task.dart';
 import 'package:todo_list/utils/app_colors.dart';
+import 'package:todo_list/utils/themes.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'Home screen';
@@ -24,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text(
             'To Do List',
-            style: TextStyle(color: AppColors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+            style:AppThemes.appBarTitle ),
         toolbarHeight: MediaQuery.of(context).size.height * 0.18,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -56,6 +58,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+      body: ListView.builder(
+          itemBuilder: (context, index) => buildTask(),
+        itemCount: 10,
+      ),
     );
   }
 
@@ -78,11 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Text(
                 'Add new Task',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.blackColorLight
-                ),
+                style: AppThemes.titleText,
                 textAlign: TextAlign.center,
               ),
               TextFormField(
@@ -91,11 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 decoration: InputDecoration(
                   hintText: 'enter your task',
-                  hintStyle: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: AppColors.grayColorLight
-                  )
+                  hintStyle: AppThemes.regularText
                 ),
               ),
               TextFormField(
@@ -104,29 +102,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 decoration: InputDecoration(
                   hintText: 'enter your task',
-                    hintStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20,
-                        color: AppColors.grayColorLight
-                    )
+                    hintStyle: AppThemes.regularText
                 ),
               ),
               Text(
                   'Select date',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 20,
-                      color: AppColors.blackColorLight
-                  )
+                  style: AppThemes.regularText.copyWith(color: AppColors.blackColorLight),
               ),
               InkWell(
                 child: Text(
                     DateFormat.yMd().format(selectedDate).toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 18,
-                        color: AppColors.grayColorLight
-                    ),
+                    style: AppThemes.regularText.copyWith(fontSize: 18),
                   textAlign: TextAlign.center,
                 ),
                 onTap: ()async{
@@ -144,19 +130,70 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: ButtonStyle(
                     backgroundColor: MaterialStateColor.resolveWith((states) => AppColors.primaryColor)
                 ),
-                  onPressed: (){}, 
+                  onPressed: (){
+                  Navigator.pop(context);
+                  },
                   child: Text(
                       'Add',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: AppColors.white
-                    ),
+                    style: AppThemes.appBarTitle,
                   )
               )
             ],
           ),
         ),
+    );
+  }
+
+  buildTask() {
+    return GestureDetector(
+      onTap: (){
+        Navigator.pushNamed(context, EditTask.routeName);
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        height: 90,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(20))
+        ),
+        width: double.infinity,
+        child: Row(
+          children: [
+            Container(
+              color: AppColors.primaryColor,
+              width: 4,
+            ),
+            const SizedBox(width: 25,),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'task 11111111111111111111111111111111111111111111',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppThemes.titleText.copyWith(color: AppColors.primaryColor, fontSize: 25),
+                  ),
+                  const SizedBox(height: 3,),
+                  Text(
+                    '20/3/44',
+                    style: AppThemes.regularText.copyWith(fontSize: 15),
+                  )
+                ],
+              ),
+            ),
+            ElevatedButton(
+             style: ButtonStyle(
+               shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+                 borderRadius: BorderRadius.all(Radius.circular(10)))),
+               backgroundColor: MaterialStateProperty.all(AppColors.primaryColor),
+
+             ),
+               onPressed: (){}, child: const Icon(Icons.check, size: 30,))
+          ],
+        ),
+      ),
     );
   }
 }
